@@ -1,4 +1,4 @@
-from rest_framework_json_api.serializers import ModelSerializer
+from drja.serializers import ModelSerializer
 from .models import Races
 
 class RaceSerializer(ModelSerializer):

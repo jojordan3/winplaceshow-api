@@ -1,8 +1,8 @@
 from .serializers import RaceSerializer, ResultsSerializer
 from .models import Races
 from .routers import CustomReadOnlyRouter
-from rest_framework_json_api import filters
-from rest_framework_json_api import django_filters
+from drja import filters
+from drja import django_filters
 from rest_framework import SearchFilter, mixins
 from rest_framework.viewsets import ReadOnlyModelViewSet, GenericViewSet
 

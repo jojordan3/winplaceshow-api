@@ -1,4 +1,4 @@
-from rest_framework.routers import Route, DynamicRoute, SimpleRouter
+'''from rest_framework.routers import Route, DynamicRoute, SimpleRouter
 
 class CustomReadOnlyRouter(SimpleRouter):
     """
@@ -27,3 +27,4 @@ class CustomReadOnlyRouter(SimpleRouter):
         )
     ]
 
+'''
