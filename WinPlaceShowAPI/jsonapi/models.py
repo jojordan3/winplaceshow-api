@@ -1,3 +1,4 @@
+# Create your models here.
 from django.db import models
 from django.contrib.postgres.fields import JSONField, ArrayField
 from django.core.serializers.json import DjangoJSONEncoder
@@ -20,9 +21,9 @@ class Races(models.Model):
     date = models.DateField()
     race_name = models.CharField(max_length=200)
     horses = ArrayField(models.CharField(max_length=200))
-    TC_PRERACES = 'NOTC'
+    TC_PRERACES = 'Pre'
     UPCOMING_TC_RACES = 'TCR'
-    PREV_TC = 'PTCR'
+    PREV_TC = 'Past'
     CATEGORY_CHOICES = (
         (PREV_TC, "Past Years' Triple Crown Races"),
         (UPCOMING_TC_RACES, "This Year's Triple Crown Races"),
@@ -30,6 +31,9 @@ class Races(models.Model):
     )
     category = models.CharField(max_length=4, choices=CATEGORY_CHOICES)
     results = JSONField()
+
+    class JSONAPIMeta:
+        resource_name = 'races'
 
     def __str__(self):
         return DjangoJSONEncoder().encode(self)

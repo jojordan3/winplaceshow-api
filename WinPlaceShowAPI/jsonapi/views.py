@@ -1,54 +1,56 @@
-from rest_framework_json_api.generics import GenericAPIView
-from rest_framework_json_api.renderers import JSONRenderer
-from WinPlaceShowAPI.v1.serializers import RaceSerializer, ResultsSerializer
+from .serializers import RaceSerializer, ResultsSerializer
 from .models import Races
-
+from .routers import CustomReadOnlyRouter
+from rest_framework_json_api import filters
+from rest_framework_json_api import django_filters
+from rest_framework import SearchFilter, mixins
+from rest_framework.viewsets import ReadOnlyModelViewSet, GenericViewSet
 
 HTTP_422_UNPROCESSABLE_ENTITY = 422
 
 # Create your views here.
-class PrevTCView(GenericAPIView):
+class PastViewSet(ReadOnlyModelViewSet):
     """
     API endpoint for previous years' Triple Crown Results
     """
-    queryset = Races.objects.filter(category='PTC')
+    resource_name = 'races'
+    queryset = Races.objects.filter(category='Past')
     serializer_class = RaceSerializer
 
-
-
-
-class PrevPreView(GenericAPIView):
+class PreViewSet(mixins.RetrieveModelMixin, GenericViewSet):
     """
     API endpoint for this year's pre-races or qualifying races
     """
-    lookup_url_kwarg = horse
-    lookup_field = horses
-    queryset = Races.objects.filter(category='PTS', horses__contains=horse)
+    resource_name = 'races'
+    lookup_field = 'horses'
+    queryset = Races.objects.filter(category='Pre')
     serializer_class = RaceSerializer
 
 
-
-class UpcomingTCView(GenericAPIView):
+class TCRViewSet(ReadOnlyModelViewSet):
     """
     API endpoint for this year's qualifying races
     """
+    resource_name = 'races'
     queryset = Races.objects.filter(category='TCR')
     serializer_class = RaceSerializer
 
 
-class GetResultsView(GenericAPIView):
+class ResultsView(ReadOnlyModelViewSet):
     """
     API endpoint for results of completed races
     """
+    resource_name = 'races'
     lookup_url_kwarg = race_id
     serializer_class = ResultsSerializer
     queryset = Races.objects.get(pk=race_id)
 
 
-class PredictResultsView(GenericAPIView):
+class PredictResultsView(ReadOnlyModelViewSet):
     """
     API endpoint for results of completed races
     """
+    resource_name = 'races'
     lookup_url_kwarg = race_id
     serializer_class = ResultsSerializer
     queryset = Races.objects.get(pk=race_id)
