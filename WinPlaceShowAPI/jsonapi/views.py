@@ -15,7 +15,7 @@ def de_sluggify(some_string, slugs_=slug_stuff):
 
 
 # Create your views here.
-@api_view(exclude_from_schema=['results'])
+@api_view()
 def category(request, cat=None):
     try:
         assert (cat in Race.CATEGORY_CHOICES)
@@ -27,7 +27,7 @@ def category(request, cat=None):
         return Response(serializer.data)
 
 
-@api_view(exclude_from_schema=['results'])
+@api_view()
 def horseview(request, horsename=None):
     try:
         horse_ = de_sluggify(horsename)
@@ -38,7 +38,7 @@ def horseview(request, horsename=None):
         raise Http404("Whoops... Try again")
 
 
-@api_view(exclude_from_schema=['horses'])
+@api_view()
 def results(request, pk=None):
     try:
         race = get_object_or_404(Race.objects.all(), pk=pk)

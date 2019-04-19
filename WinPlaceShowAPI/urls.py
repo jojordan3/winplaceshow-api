@@ -24,7 +24,7 @@ Horses: {* same as above with probability winning}
 
 
 urlpatterns = [
-    re_path(r"races/(?P<cat>(Pre|Past|TCR)/", category),
+    re_path(r"(races/)(?P<cat>(Pre|Past|TCR))/", category),
     path("horse/<slug:horsename>/", horseview),
     path("results/<int:pk>/", results),
     path("predict/<int:pk>", predict_results),
