@@ -35,7 +35,6 @@ ALLOWED_HOSTS = ["*"]
 INSTALLED_APPS = [
 #    'whitenoise.runserver_nostatic',
     'WinPlaceShowAPI.jsonapi',
-    'django_filters',
     'rest_framework',
     'corsheaders',
     'rest_framework_json_api',
