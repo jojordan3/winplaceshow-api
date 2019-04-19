@@ -13,6 +13,7 @@ django-import-export==1.2.0
 djangorestframework==3.9.2
 djangorestframework-jsonapi==2.7.0
 et-xmlfile==1.0.1
+gunicorn==19.9.0
 idna==2.8
 inflection==0.3.1
 itsdangerous==1.1.0

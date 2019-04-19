@@ -99,7 +99,7 @@ CSRF_TRUSTED_ORIGINS = (
     #'change.allowed.com',
 )
 
-
+DEBUG=False
 REST_FRAMEWORK = {
     'PAGE_SIZE': 10,
     'EXCEPTION_HANDLER': 'rest_framework_json_api.exceptions.exception_handler',
