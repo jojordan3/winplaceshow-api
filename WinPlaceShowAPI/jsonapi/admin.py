@@ -26,4 +26,5 @@ class HorseAdmin(ImportExportActionModelAdmin):
     resource_class = HorseResource
 
 
-admin.site.register(Race, RaceAdmin, Horse, HorseAdmin)
+admin.site.register(Race, RaceAdmin)
+admin.site.register(Horse, HorseAdmin)
