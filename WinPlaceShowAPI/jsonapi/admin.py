@@ -1,18 +1,29 @@
 from django.contrib import admin
 from import_export import resources
 from import_export.admin import ImportExportActionModelAdmin
-from .models import Races
+from .models import Race, Horse
 
 
-class RacesResource(resources.ModelResource):
+class RaceResource(resources.ModelResource):
     class Meta:
-        model = Races
+        model = Race
         skip_unchanged = True
         report_skipped = False
 
 
-class RacesAdmin(ImportExportActionModelAdmin):
-    resource_class = RacesResource
+class HorseResource(resources.ModelResource):
+    class Meta:
+        model = Horse
+        skip_unchanged = True
+        report_skipped = False
 
 
-admin.site.register(Races, RacesAdmin)
+class RaceAdmin(ImportExportActionModelAdmin):
+    resource_class = RaceResource
+
+
+class HorseAdmin(ImportExportActionModelAdmin):
+    resource_class = HorseResource
+
+
+admin.site.register(Race, RaceAdmin, Horse, HorseAdmin)

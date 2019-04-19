@@ -48,18 +48,19 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 ]
 
+PREPEND_WWW = True
 
 MIDDLEWARE = [
-    'corsheaders.middleware.CorsMiddleware',
-    'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.security.SecurityMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
+    'corsheaders.middleware.CorsPostCsrfMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    #'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
 ROOT_URLCONF = 'WinPlaceShowAPI.urls'
@@ -73,17 +74,18 @@ CORS_ALLOW_METHODS = (
     # 'PUT',
 )
 
+CORS_REPLACE_HTTPS_REFERER = True
 
 CORS_ALLOW_HEADERS = (
-    'accept',
-    'accept-encoding',
+    #'accept',
+    #'accept-encoding',
     'authorization',
     'content-type',
-    'dnt',
-    'origin',
-    'user-agent',
-    'x-csrftoken',
-    'x-requested-with',
+    #'dnt',
+    #'origin',
+    #'user-agent',
+    #'x-csrftoken',
+    #'x-requested-with',
 )
 
 CORS_ORIGIN_ALLOW_ALL = True
@@ -210,6 +212,9 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, 'static'),
+)
 
 
 django_heroku.settings(locals())

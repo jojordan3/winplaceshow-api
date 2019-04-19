@@ -20,10 +20,10 @@ class Race(models.Model):
     PREV_TC = 'PastTCR'
     PAST = 'PastPre'
     CATEGORY_CHOICES = (
-        (PAST, "Past Years' Triple Crown Prep Races")
+        (PAST, "Past Years' Triple Crown Prep Races"),
         (PREV_TC, "Past Years' Triple Crown Races"),
         (UPCOMING_TC_RACES, "This Year's Triple Crown Races"),
-        (TC_PRERACES, "Races Leading Up To This Year's Triple Crown")
+        (TC_PRERACES, "Races Leading Up To This Year's Triple Crown"),
     )
     category = models.CharField(max_length=4, choices=CATEGORY_CHOICES, blank=True)
     results = JSONField(blank=True)

@@ -5,7 +5,7 @@ from rest_framework.decorators import api_view
 from django.http import Http404
 from rest_framework.serializers import Serializer
 from .predictions import RacePredictor
-from .models import Races
+from .models import Race, Horse
 
 
 slug_stuff = re.compile(r'[_\-]+')
@@ -18,11 +18,11 @@ def de_sluggify(some_string, slugs_=slug_stuff):
 @api_view(exclude_from_schema=['results'])
 def category(request, cat=None):
     try:
-        assert (cat in Races.CATEGORY_CHOICES)
+        assert (cat in Race.CATEGORY_CHOICES)
     except:
         raise Http404("Whoops... Try again")
     else:
-        queryset = Races.objects.filter(category=cat)
+        queryset = Race.objects.filter(category=cat)
         serializer= Serializer(queryset, many=True)
         return Response(serializer.data)
 
@@ -31,7 +31,7 @@ def category(request, cat=None):
 def horseview(request, horsename=None):
     try:
         horse_ = de_sluggify(horsename)
-        queryset = Races.objects.filter(horses__contains=[horse_])
+        queryset = Horse.objects.filter(horses__contains=[horse_])
         serializer = Serializer(queryset, many=True)
         return Response(serializer.data)
     except:
@@ -41,7 +41,7 @@ def horseview(request, horsename=None):
 @api_view(exclude_from_schema=['horses'])
 def results(request, pk=None):
     try:
-        race = get_object_or_404(Races.objects.all(), pk=pk)
+        race = get_object_or_404(Race.objects.all(), pk=pk)
         assert (race['category'] in ['Pre', 'Past'])
     except:
         raise Http404("We don't have results for that race")
@@ -52,7 +52,7 @@ def results(request, pk=None):
 
 @api_view()
 def predict_results(request, pk=None):
-    race = get_object_or_404(Races.objects.filter(category='TCR', pk=pk))
+    race = get_object_or_404(Horse.objects.filter(category='TCR', pk=pk))
     try:
         race.results = RacePredictor(race.horses)
         serializer = Serializer(race, many=False)
