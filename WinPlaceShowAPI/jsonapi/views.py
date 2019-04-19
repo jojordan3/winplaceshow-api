@@ -1,56 +1,61 @@
-from .serializers import RaceSerializer, ResultsSerializer
+import re
+from rest_framework.response import Response
+from rest_framework.generics import get_object_or_404
+from rest_framework.decorators import api_view
+from django.http import Http404
+from rest_framework.serializers import Serializer
+from .predictions import RacePredictor
 from .models import Races
-from .routers import CustomReadOnlyRouter
-from drja import filters
-from drja import django_filters
-from rest_framework import SearchFilter, mixins
-from rest_framework.viewsets import ReadOnlyModelViewSet, GenericViewSet
 
-HTTP_422_UNPROCESSABLE_ENTITY = 422
+
+slug_stuff = re.compile(r'[_\-]+')
+def de_sluggify(some_string, slugs_=slug_stuff):
+    new_string = some_string.replace(slug_stuff, ' ')
+    return new_string
+
 
 # Create your views here.
-class PastViewSet(ReadOnlyModelViewSet):
-    """
-    API endpoint for previous years' Triple Crown Results
-    """
-    resource_name = 'races'
-    queryset = Races.objects.filter(category='Past')
-    serializer_class = RaceSerializer
-
-class PreViewSet(mixins.RetrieveModelMixin, GenericViewSet):
-    """
-    API endpoint for this year's pre-races or qualifying races
-    """
-    resource_name = 'races'
-    lookup_field = 'horses'
-    queryset = Races.objects.filter(category='Pre')
-    serializer_class = RaceSerializer
+@api_view(exclude_from_schema=['results'])
+def category(request, cat=None):
+    try:
+        assert (cat in Races.CATEGORY_CHOICES)
+    except:
+        raise Http404("Whoops... Try again")
+    else:
+        queryset = Races.objects.filter(category=cat)
+        serializer= Serializer(queryset, many=True)
+        return Response(serializer.data)
 
 
-class TCRViewSet(ReadOnlyModelViewSet):
-    """
-    API endpoint for this year's qualifying races
-    """
-    resource_name = 'races'
-    queryset = Races.objects.filter(category='TCR')
-    serializer_class = RaceSerializer
+@api_view(exclude_from_schema=['results'])
+def horseview(request, horsename=None):
+    try:
+        horse_ = de_sluggify(horsename)
+        queryset = Races.objects.filter(horses__contains=[horse_])
+        serializer = Serializer(queryset, many=True)
+        return Response(serializer.data)
+    except:
+        raise Http404("Whoops... Try again")
 
 
-class ResultsView(ReadOnlyModelViewSet):
-    """
-    API endpoint for results of completed races
-    """
-    resource_name = 'races'
-    lookup_url_kwarg = race_id
-    serializer_class = ResultsSerializer
-    queryset = Races.objects.get(pk=race_id)
+@api_view(exclude_from_schema=['horses'])
+def results(request, pk=None):
+    try:
+        race = get_object_or_404(Races.objects.all(), pk=pk)
+        assert (race['category'] in ['Pre', 'Past'])
+    except:
+        raise Http404("We don't have results for that race")
+
+    serializer = Serializer(race, many=False)
+    return Response(serializer.data)
 
 
-class PredictResultsView(ReadOnlyModelViewSet):
-    """
-    API endpoint for results of completed races
-    """
-    resource_name = 'races'
-    lookup_url_kwarg = race_id
-    serializer_class = ResultsSerializer
-    queryset = Races.objects.get(pk=race_id)
+@api_view()
+def predict_results(request, pk=None):
+    race = get_object_or_404(Races.objects.filter(category='TCR', pk=pk))
+    try:
+        race.results = RacePredictor(race.horses)
+        serializer = Serializer(race, many=False)
+    except:
+        raise Http404("Whoops... try again")
+    return Response(serializer)

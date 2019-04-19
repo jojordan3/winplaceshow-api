@@ -29,16 +29,17 @@ DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
 
-
+#import WinPlaceShowAPI.jsonapi.apps.JsonapiConfig
 # Application definition
 
 INSTALLED_APPS = [
 #    'whitenoise.runserver_nostatic',
-    'jsonapi.apps.JSONAPIConfig',
+    'WinPlaceShowAPI.jsonapi',
+    'django_filters',
     'rest_framework',
     'corsheaders',
+    'rest_framework_json_api',
     'rest_framework.authtoken',
-    'drja.apps.RestJSONConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -99,33 +100,34 @@ CSRF_TRUSTED_ORIGINS = (
 
 REST_FRAMEWORK = {
     'PAGE_SIZE': 10,
-    'EXCEPTION_HANDLER': 'WinPlaceShowAPI.apps.rest_framework_json_api.exceptions.exception_handler',
+    'EXCEPTION_HANDLER': 'rest_framework_json_api.exceptions.exception_handler',
     'DEFAULT_PAGINATION_CLASS':
-        'WinPlaceShowAPI.apps.rest_framework_json_api.pagination.JsonApiPageNumberPagination',
+        'rest_framework_json_api.pagination.JsonApiPageNumberPagination',
     'DEFAULT_PARSER_CLASSES': (
-        'WinPlaceShowAPI.apps.rest_framework_json_api.parsers.JSONParser',
+        'rest_framework_json_api.parsers.JSONParser',
         'rest_framework.parsers.FormParser',
         'rest_framework.parsers.MultiPartParser'
     ),
     'DEFAULT_RENDERER_CLASSES': (
-        'WinPlaceShowAPI.apps.rest_framework_json_api.renderers.JSONRenderer',
+        'rest_framework_json_api.renderers.JSONRenderer',
         # If you're performance testing, you will want to use the browseable API
         # without forms, as the forms can generate their own queries.
         # If performance testing, enable:
         # 'example.utils.BrowsableAPIRendererWithoutForms',
         # Otherwise, to play around with the browseable API, enable:
-        'rest_framework.renderers.BrowsableAPIRenderer'
+        # 'rest_framework.renderers.BrowsableAPIRenderer'
     ),
-    'DEFAULT_METADATA_CLASS': 'WinPlaceShowAPI.apps.rest_framework_json_api.metadata.JSONAPIMetadata',
+    'DEFAULT_METADATA_CLASS': 'rest_framework_json_api.metadata.JSONAPIMetadata',
     'DEFAULT_FILTER_BACKENDS': (
-        'WinPlaceShowAPI.apps.rest_framework_json_api.filters.QueryParameterValidationFilter',
-        'WinPlaceShowAPI.apps.rest_framework_json_api.filters.OrderingFilter',
-        'WinPlaceShowAPI.apps.rest_framework_json_api.django_filters.DjangoFilterBackend',
-        'rest_framework.filters.SearchFilter',
+        'django_filters.rest_framework.DjangoFilterBackend',
+        #'rest_framework_json_api.filters.QueryParameterValidationFilter',
+        #'rest_framework_json_api.filters.OrderingFilter',
+        #'rest_framework_json_api.django_filters.DjangoFilterBackend',
+        #'rest_framework.filters.SearchFilter',
     ),
     'SEARCH_PARAM': 'filter[search]',
     'TEST_REQUEST_RENDERER_CLASSES': (
-        'WinPlaceShowAPI.apps.rest_framework_json_api.renderers.JSONRenderer',
+        'rest_framework_json_api.renderers.JSONRenderer',
     ),
     'TEST_REQUEST_DEFAULT_FORMAT': 'vnd.api+json',
     'DEFAULT_PERMISSION_CLASSES': 'rest_framework.permissions.AllowAny',
@@ -166,7 +168,7 @@ DATABASES = {
 }
 
 
-DATABASES['default'] =  dj_database_url.config(conn_max_age=600, ssl_require=False)
+#DATABASES['default'] =  dj_database_url.config(conn_max_age=600, ssl_require=False)
 
 
 # Password validation

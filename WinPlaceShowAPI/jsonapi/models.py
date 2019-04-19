@@ -3,18 +3,9 @@ from django.db import models
 from django.contrib.postgres.fields import JSONField, ArrayField
 from django.core.serializers.json import DjangoJSONEncoder
 
-"""JSON objects
-Race object (past years Triple Crown)
-{id: ID, year: YEAR, name of race: Name, horses: [list of horse objects]}
-
-Race object (current year)
-{id: ID, date: DATE, name of race: NAME, city: CITY, track: track name, horses: [list of horse objects]}
-
-Horse in race object
-{id: ID, name: NAME, raceID: RACEID, prize winnings: DOLLARS, rank: RANK}
-
-Prediction JSON object
-Horses: {* same as above with probability winning}"""
+"""
+Races and Horses
+"""
 # Create your models here.
 
 class Races(models.Model):
@@ -34,6 +25,27 @@ class Races(models.Model):
 
     class JSONAPIMeta:
         resource_name = 'races'
+        JSON_API_PLURALIZE_TYPES = True
+
+    def __str__(self):
+        return DjangoJSONEncoder().encode(self)
+
+
+class Horses(models.Model):
+    name = models.CharField(max_length=200)
+    age = models.PositiveSmallIntegerField()
+    owner = models.CharField(max_length=200)
+    sire = models.CharField(max_length=200)
+    dam = models.CharField(max_length=200)
+    career_winnings = models.PositiveIntegerField()
+    career_wins = models.PositiveSmallIntegerField()
+    career_places = models.PositiveSmallIntegerField()
+    career_shows = models.PositiveSmallIntegerField()
+    breed = models.CharField(max_length=50)
+
+    class JSONAPIMeta:
+        resource_name = 'races'
+        JSON_API_PLURALIZE_TYPES = True
 
     def __str__(self):
         return DjangoJSONEncoder().encode(self)

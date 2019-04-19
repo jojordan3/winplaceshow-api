@@ -1,21 +1,33 @@
-"""WinPlaceShowAPI URL Configuration
-
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/2.2/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  path('', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
-Including another URLconf
-    1. Import the include() function: from django.urls import include, path
-    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
-"""
+from django.urls import re_path, path
+from .jsonapi.views import *
 from django.contrib import admin
-from django.urls import path
+
+"""Search by criteria: 
+Past Triple Crown Races Past: Immediately List All Races (No search criteria)
+This year's past races: Horse Name
+Future Race: Immediately List All Races (No search criteria)
+
+JSON objects
+Race object (past years Triple Crown)
+{id: ID, year: YEAR, name of race: Name, horses: [list of horse objects]}
+
+Race object (current year)
+{id: ID, date: DATE, name of race: NAME, city: CITY, track: track name, horses: [list of horse objects]}
+
+Horse in race object
+{id: ID, name: NAME, raceID: RACEID, prize winnings: DOLLARS, rank: RANK}
+
+Prediction JSON object
+Horses: {* same as above with probability winning}
+"""
+
+
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    re_path(r"races/(?P<cat>(Pre|Past|TCR)/", category),
+    path("horse/<slug:horsename>/", horseview),
+    path("results/<int:pk>/", results),
+    path("predict/<int:pk>", predict_results),
+    path("admin/", admin.site.urls, name="admin"),
 ]
+
